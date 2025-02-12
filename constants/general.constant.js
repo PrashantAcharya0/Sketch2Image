@@ -1,9 +1,9 @@
 export const roles = [
   {
     id: 1,
-    role: 'superadmin',
+    role: 'buyer',
   },
-  { id: 2, role: 'admin' },
+  { id: 2, role: 'seller' },
 ];
 export const genders = [
   {

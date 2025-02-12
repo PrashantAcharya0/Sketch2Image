@@ -1,39 +1,30 @@
 'use client';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
-const ImagePreview = ({ image }) => {
+const ImagePreview = ({ image, onRemove }) => {
   const router = useRouter();
 
-  if (!image) {
-    return (
-      <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography variant="h6" color="error" suppressHydrationWarning>
-          No image available. Please upload one.
-        </Typography>
-      </Box>
-    );
-  }
-
   const handleGenerate = () => {
-    router.push('/ProfilePage');
+    router.push('/generate');
   };
 
   return (
     <Box
       sx={{
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
         flexDirection: 'column',
+        alignItems: 'center',
         textAlign: 'center',
-        mt: 4,
       }}
     >
-      <img src={image} alt="Converted" width="300px" />
-      <Box sx={{ mt: 2 }}>
+      <img src={image} alt="Converted" width="100%" style={{ maxHeight: '180px', objectFit: 'contain' }} />
+      <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+        <Button variant="outlined" color="error" onClick={onRemove}>
+          Remove
+        </Button>
         <Button variant="contained" color="primary" onClick={handleGenerate}>
-          Generate
+          Convert
         </Button>
       </Box>
     </Box>

@@ -1,24 +1,30 @@
 'use client';
-import {
-  AppBar,
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  Toolbar,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ImageUpload from './ImageUpload';
+import Header from './Header';
 
 const Home = () => {
   const router = useRouter();
-  const [userInitial, setUserInitial] = useState('U'); // Default value to avoid mismatch
+  const [userInitial, setUserInitial] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    setUserInitial(''); // Runs only on the client to prevent SSR issues
-  }, []);
+    const token = localStorage.getItem('token');
+    const firstName = localStorage.getItem('firstName');
+
+    if (!token) {
+      router.push('/login'); // Redirect to login if no token found
+    } else {
+      setIsAuthenticated(true);
+      setUserInitial(firstName ? firstName.charAt(0).toUpperCase() : 'U');
+    }
+  }, [router]);
+
+  if (!isAuthenticated) {
+    return null; // Prevent flashing of home content before redirection
+  }
 
   const handleProfileClick = () => {
     router.push('/profile');
@@ -35,26 +41,11 @@ const Home = () => {
         overflowX: 'hidden',
       }}
     >
-      {/* Page Header */}
-      <AppBar
-        position="static"
-        sx={{ backgroundColor: 'primary.main', width: '100%' }}
-      >
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1, fontSize: 25 }}>
-            Sketch ⇒ Image
-          </Typography>
-          <Button sx={{ color: '#1a237e' }}>Home</Button>
-          <Button sx={{ color: '#1a237e' }}>Contact</Button>
-
-          {/* Profile Icon */}
-          <IconButton onClick={handleProfileClick} sx={{ marginLeft: 2 }}>
-            <Avatar sx={{ bgcolor: 'secondary.main' }}>
-              {userInitial || 'U'}
-            </Avatar>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      {/* Pass props to Header */}
+      <Header
+        handleProfileClick={handleProfileClick}
+        userInitial={userInitial}
+      />
 
       {/* Page Main Content */}
       <Box sx={{ flex: 1, textAlign: 'center', px: 2, width: '100%' }}>

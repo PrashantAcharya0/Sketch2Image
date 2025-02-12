@@ -31,19 +31,36 @@ const Login = () => {
       return await $axios.post('/user/login', values);
     },
     onSuccess: (response) => {
-      console.log(response);
-      if (isClient) {
-        // Ensure this only happens on the client
+      console.log('Login response:', response.data);
+
+      if (typeof window !== 'undefined') {
         window.localStorage.setItem('token', response?.data?.accessToken);
         window.localStorage.setItem(
           'firstName',
-          response?.data?.userDetails?.firstName
+          response?.data?.userDetails?.firstName || ''
+        );
+        window.localStorage.setItem(
+          'lastName',
+          response?.data?.userDetails?.lastName || ''
+        );
+        window.localStorage.setItem(
+          'email',
+          response?.data?.userDetails?.email || ''
+        );
+        window.localStorage.setItem(
+          'gender',
+          response?.data?.userDetails?.gender || ''
         );
         window.localStorage.setItem(
           'userRole',
-          response?.data?.userDetails?.role
+          response?.data?.userDetails?.role || ''
+        );
+        window.localStorage.setItem(
+          'profilePic',
+          response?.data?.userDetails?.profilePic || ''
         );
       }
+
       router.push('/');
     },
 
